@@ -57,6 +57,14 @@ RUN \
   rm /tmp/go-agent.zip && \
   mkdir -p /docker-entrypoint.d
 
+# AWS ECR Credential Helper
+RUN apk add --no-cache go musl-dev && \
+  go get -u github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login && \
+  cp /root/go/bin/docker-credential-ecr-login /usr/local/bin && \
+  mkdir /home/go/.docker
+
+ADD config.json /home/go/.docker
+
 # ensure that logs are printed to console output
 COPY agent-bootstrapper-logback-include.xml agent-launcher-logback-include.xml agent-logback-include.xml /go-agent/config/
 
